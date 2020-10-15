@@ -1,5 +1,6 @@
 <template>
-  <div class="hello">
+<button type="button" class="btn btn-success" @click.prevent="signout">登出</button>
+  <!-- <div class="hello">
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
     <ul>
@@ -80,7 +81,7 @@
         </a>
       </li>
     </ul>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -89,6 +90,18 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  methods: {
+    signout() {
+        const api = `${process.env.PATH}/logout`;
+        const vm = this;
+        this.$http.post(api).then((response) => {
+        console.log(response.data.success);
+        if (response.data.success) {
+          vm.$router.push('login');
+        }
+      });
     }
   }
 }

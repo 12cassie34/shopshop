@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="form-signin" @submit.prevent="singin">
+    <form class="form-signin" @submit.prevent="signin">
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
       <input
@@ -50,7 +50,13 @@ export default {
       const api = `${process.env.PATH}/admin/signin`;
       const vm = this;
       this.$http.post(api, vm.user).then((response) => {
-        console.log(response.data);
+        if (response.data.success) {
+          const token = response.data.token;
+          let expired = response.data.expired;
+          expired = new Date(expired);
+          document.cookie = `shoptoken=${ token }; expires=${ expired }`;
+          vm.$router.push('/');
+        }
       });
     }
   }
