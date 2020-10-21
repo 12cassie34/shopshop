@@ -18,3 +18,18 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+      const api = `${process.env.PATH}/api/user/check`;
+      axios.post(api).then((response) => {
+        if (response.data.success) {
+          next();
+        } else {
+          next({path: '/login'});
+        }
+      });
+  } else {
+    next();
+  }
+})
