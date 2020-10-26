@@ -55,7 +55,7 @@ export default {
           let expired = response.data.expired;
           expired = new Date(expired);
           document.cookie = `shoptoken=${ token }; expires=${ expired }`;
-          vm.$router.push('/');
+          vm.$router.push('/admin/products');
         }
       });
     }

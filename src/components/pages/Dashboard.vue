@@ -1,5 +1,6 @@
 <template>
   <div>
+    <button type="button" class="btn btn-success" @click.prevent="signout">登出</button>
     <div class="container-fluid">
       <div class="row">
         <sidebar></sidebar>
@@ -20,6 +21,10 @@ export default {
   components: {
     Sidebar,
     Navbar,
+  },
+  created() {
+    const myCookie = document.cookie.replace(/(?:(?:^|.*;\s*)shoptoken\s*=\s*([^;]*).*$)|^.*$/, '$1');
+    this.$http.defaults.headers.common.Authorization = myCookie;
   }
 }
 </script>
