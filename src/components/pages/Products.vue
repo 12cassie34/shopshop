@@ -1,5 +1,6 @@
 <template>
   <div>
+     <loading :active.sync="isLoading"></loading>
     <div class="action">
       <button type="button" class="btn btn-primary float-right"
         @click.prevent="showModal(true)">
@@ -61,7 +62,7 @@
                   <div class="form-group">
                     <label for="customFile">
                       或 上傳圖片
-                      <i class="fas fa-spinner fa-spin"></i>
+                      <i class="fas fa-spinner fa-spin" v-if="status.uploading"></i>
                     </label>
                     <input @change="uploadFile" name="file-to-upload" type="file" id="customFile"
                       class="form-control" ref="files"/>
@@ -186,15 +187,21 @@ export default {
       products: [],
       temProduct: {},
       isNew: false,
+      isLoading: false,
+      status: {
+        uploading: false,
+      }
     };
   },
   methods: {
     getProducts() {
+      this.isLoading = true;
       const api = `${process.env.PATH}/api/${process.env.CUSTOME_PATH}/admin/products?page=:page`;
       const vm = this;
       this.$http.get(api).then((response) => {
         console.log(response.data);
         vm.products = response.data.products;
+        this.isLoading = false;
       });
     },
     showModal(isNew, item) {
@@ -240,6 +247,7 @@ export default {
       this.getProducts();
     },
     uploadFile() {
+      this.status.uploading = true;
       const uploadedFile = this.$refs.files.files[0];
       const vm = this;
       const formData = new FormData();
@@ -252,6 +260,7 @@ export default {
       }).then((response) => {
         if(response.data.success) {
           this.$set(vm.temProduct, 'imageUrl', response.data.imageUrl);
+          this.status.uploading = false;
         }
       });
     },
