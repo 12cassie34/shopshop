@@ -63,7 +63,7 @@
                       或 上傳圖片
                       <i class="fas fa-spinner fa-spin"></i>
                     </label>
-                    <input type="file" id="customFile"
+                    <input @change="uploadFile" name="file-to-upload" type="file" id="customFile"
                       class="form-control" ref="files"/>
                   </div>
                   <img img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
@@ -238,6 +238,22 @@ export default {
       });
       $("#delProductModal").modal("hide");
       this.getProducts();
+    },
+    uploadFile() {
+      const uploadedFile = this.$refs.files.files[0];
+      const vm = this;
+      const formData = new FormData();
+      const url = `${process.env.PATH}/api/${process.env.CUSTOME_PATH}/admin/upload`;
+      formData.append('file-to-upload', uploadedFile);
+      this.$http.post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      }).then((response) => {
+        if(response.data.success) {
+          this.$set(vm.temProduct, 'imageUrl', response.data.imageUrl);
+        }
+      });
     },
   },
   created() {
