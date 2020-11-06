@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Alert></Alert>
     <button type="button" class="btn btn-success" @click.prevent="signout">登出</button>
     <div class="container-fluid">
       <div class="row">
@@ -16,11 +17,13 @@
 <script>
 import Sidebar from '../layouts/Sidebar.vue';
 import Navbar from '../layouts/Nav.vue';
+import Alert from '../AlertMessage.vue';
 
 export default {
   components: {
     Sidebar,
     Navbar,
+    Alert,
   },
   created() {
     const myCookie = document.cookie.replace(/(?:(?:^|.*;\s*)shoptoken\s*=\s*([^;]*).*$)|^.*$/, '$1');

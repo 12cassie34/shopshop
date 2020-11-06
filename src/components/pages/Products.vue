@@ -261,6 +261,8 @@ export default {
         if(response.data.success) {
           this.$set(vm.temProduct, 'imageUrl', response.data.imageUrl);
           this.status.uploading = false;
+        } else {
+          this.$bus.$emit('message:push', '檔案錯誤', 'danger');
         }
       });
     },
