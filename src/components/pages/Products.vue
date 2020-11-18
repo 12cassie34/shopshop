@@ -271,12 +271,18 @@
         </div>
       </div>
     </div>
+    <pagination @passFunction="getProducts"></pagination>
   </div>
 </template>
 
 <script>
 import $ from "jquery";
+import Pagination from "../Pagination";
+
 export default {
+  components: {
+    Pagination,
+  },
   data() {
     return {
       products: [],
@@ -286,16 +292,13 @@ export default {
       status: {
         uploading: false,
       },
+      pagination: {},
       page: 1,
     };
   },
   methods: {
     getProducts(page = 1) {
       this.isLoading = true;
-      this.$bus.$on('pass:page', (page) => {
-        this.page = page;
-      });
-      
       let api = `${process.env.PATH}/api/${process.env.CUSTOME_PATH}/admin/products?page=${page}`;
       console.log(api);
       const vm = this;
@@ -369,9 +372,6 @@ export default {
         }
       });
     },
-  },
-  created() {
-    this.getProducts();
   },
   mounted() {
     this.getProducts();

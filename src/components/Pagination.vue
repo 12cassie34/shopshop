@@ -36,6 +36,7 @@
 
 <script>
 export default {
+  name: "Pagination",
   data() {
     return {
       pagination: {},
@@ -46,26 +47,23 @@ export default {
       if (this.pagination.current_page != 1) {
         this.pagination.current_page = this.pagination.current_page - 1;
       }
-      const page = this.pagination.current_page;
-      this.$bus.$emit('pass:page', page);
+      this.$emit('passFunction', this.pagination.current_page);
     },
     nextPage() {
       if (this.pagination.current_page < this.pagination.total_pages) {
         this.pagination.current_page = this.pagination.current_page + 1;
       }
-      const page = this.pagination.current_page;
-      this.$bus.$emit('pass:page', page);
+      this.$emit('passFunction', this.pagination.current_page);
     },
     currentPage(currentPage) {
       this.pagination.current_page = currentPage;
-      const page = this.pagination.current_page;
-      this.$bus.$emit('pass:page', page);
+      this.$emit('passFunction', this.pagination.current_page);
     },
   },
   created() {
     const vm = this;
     this.$bus.$on("page:change", function (pagination) {
-      vm.pagination = pagination;
+       vm.pagination = pagination;
     });
   },
 };
