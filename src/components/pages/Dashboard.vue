@@ -1,7 +1,6 @@
 <template>
   <div>
     <Alert></Alert>
-    <button type="button" class="btn btn-success" @click.prevent="signout">登出</button>
     <div class="container-fluid">
       <div class="row">
         <sidebar></sidebar>

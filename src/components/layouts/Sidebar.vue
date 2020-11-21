@@ -4,6 +4,7 @@
       id="sidebarMenu"
       class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
     >
+      <button type="button" class="btn btn-success" @click.prevent="signout">登出</button>
       <div class="sidebar-sticky pt-3">
         <h6
           class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
@@ -66,3 +67,28 @@
     </nav>
   </div>
 </template>
+
+<script>
+export default {
+  name: "Sidebar",
+  data() {
+    return {
+
+    };
+  },
+  methods: {
+    signout() {
+      let api = `${process.env.PATH}/logout`;
+      const vm = this;
+      this.$http.post(api).then((response) => {
+        console.log(response.data);
+        if (response.data.success) {
+          alert("您已登出");
+          location.href = '/login'
+        }
+      });
+    },
+  }
+
+}
+</script>
