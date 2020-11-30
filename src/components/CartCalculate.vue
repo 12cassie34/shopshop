@@ -12,7 +12,7 @@
         </thead>
         <tbody>
           <tr v-for="cartProduct in cartProducts" :key="cartProduct.id">
-            <td><i class="far fa-trash-alt"></i></td>
+            <td><button @click="remove(cartProduct.id)" type="button" class="btn btn-outline-danger"><i class="far fa-trash-alt"></i></button></td>
             <td>{{ cartProduct.product.title }}</td>
             <td>{{ cartProduct.qty }} {{ cartProduct.product.unit }}</td>
             <td>{{ cartProduct.total }}</td>
@@ -56,9 +56,6 @@
   margin: 0 auto;
   width: 70%;
 }
-.fa-trash-alt {
-  color: indianred;
-}
 .coupon-total {
   color: mediumseagreen;
   font-weight: bold;
@@ -74,6 +71,20 @@ export default {
       subtotal: 0,
       finalTotal: 0,
     };
+  },
+  methods: {
+      remove(id) {
+        const confirmed = confirm("您確定嗎？");
+        if (confirmed) {
+            const api = `${process.env.PATH}/api/${process.env.CUSTOME_PATH}/cart/${id}`;
+            const vm = this;
+            this.$http.delete(api).then((response) => {
+            vm.$emit('passFunction');
+          });
+        } else {
+            return false;
+        }
+      },
   },
   created() {
     const vm = this;

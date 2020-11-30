@@ -110,7 +110,7 @@
         </div>
       </div>
     </div>
-    <Cartcalculate></Cartcalculate>
+    <Cartcalculate @passFunction="getCart"></Cartcalculate>
   </div>
 </template>
 
