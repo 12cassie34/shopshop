@@ -49,11 +49,11 @@
           </h6>
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" href="#">
+              <router-link to="/admin/products" class="nav-link" :class="{'active' : $route.path == '/admin/products'}">
                 <span data-feather="home"></span>
                 <i class="fas fa-list-ul"></i>
-                產品列表 <span class="sr-only">(current)</span>
-              </a>
+                產品列表</span>
+              </router-link>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">
@@ -63,11 +63,11 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <router-link to="/admin/coupons" class="nav-link" :class="{'active' : $route.path == '/admin/coupons'}">
                 <span data-feather="shopping-cart"></span>
                 <i class="fas fa-ticket-alt"></i>
                 優惠券
-              </a>
+              </router-link>
             </li>
           </ul>
 
@@ -85,7 +85,7 @@
           </h6>
           <ul class="nav flex-column mb-2">
             <li class="nav-item">
-              <router-link to="/customer_order" class="nav-link">
+              <router-link to="/customer_order" class="nav-link" :class="{'active' : $route.path == '/customer_order'}">
                 <span data-feather="file-text"></span>
                 <i class="fas fa-store-alt"></i>
                 模擬訂單</router-link

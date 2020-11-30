@@ -4,7 +4,7 @@
     <div class="action">
       <button
         type="button"
-        class="btn btn-primary float-right"
+        class="btn btn-primary float-right create-product"
         @click.prevent="showModal(true)"
       >
         建立新的產品
@@ -274,6 +274,12 @@
     <pagination @passFunction="getProducts"></pagination>
   </div>
 </template>
+
+<style scoped>
+.create-product {
+  margin-bottom: 15px;
+}
+</style>
 
 <script>
 import $ from "jquery";
