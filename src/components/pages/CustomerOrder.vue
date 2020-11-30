@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-4 mb-4" v-for="(product, key) in products">
+    <div class="col-md-4 mb-4" v-for="(product, key) in products" :key="key">
       <div class="card border-0 shadow-sm">
         <div
           style="
@@ -17,7 +17,6 @@
           </h5>
           <p class="card-text">{{ product.description }}</p>
           <div class="d-flex justify-content-between align-items-baseline">
-            <!-- <div class="h5">2,800 元</div> -->
             <del class="h6">原價 {{ product.origin_price }} 元</del>
             <div class="h5">現在只要 {{ product.price }} 元</div>
           </div>
@@ -28,11 +27,21 @@
             type="button"
             class="btn btn-outline-secondary btn-sm"
           >
-            <i class="fas fa-spinner fa-spin" v-if="status.loadingItem == product.id"></i>
+            <i
+              class="fas fa-spinner fa-spin"
+              v-if="status.loadingItem == product.id"
+            ></i>
             查看更多
           </button>
-          <button type="button" class="btn btn-outline-danger btn-sm ml-auto">
-            <i class="fas fa-spinner fa-spin" v-if="status.loadingItem == product.id"></i>
+          <button
+            @click="addCart(product.id)"
+            type="button"
+            class="btn btn-outline-danger btn-sm ml-auto"
+          >
+            <i
+              class="fas fa-spinner fa-spin"
+              v-if="status.addingChart == product.id"
+            ></i>
             加到購物車
           </button>
         </div>
@@ -49,7 +58,9 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="productModalLabel">{{singleProduct.title}}</h5>
+            <h5 class="modal-title" id="productModalLabel">
+              {{ singleProduct.title }}
+            </h5>
             <button
               type="button"
               class="close"
@@ -60,44 +71,75 @@
             </button>
           </div>
           <div class="modal-body">
-              <img :src="`${singleProduct.imageUrl}`" :alt="`${singleProduct.title}`">
-              <h4><strong>{{singleProduct.description}}</strong></h4>
-              <div class="price-row row">
-                  <div class="col-4"><del class="h6">原價 {{ singleProduct.origin_price }} 元</del></div>
-                  <div class="col-8 price"><div class="h5">現在只要 {{ singleProduct.price }} 元</div></div>
+            <img
+              :src="`${singleProduct.imageUrl}`"
+              :alt="`${singleProduct.title}`"
+            />
+            <h4>
+              <strong>{{ singleProduct.description }}</strong>
+            </h4>
+            <div class="price-row row">
+              <div class="col-4">
+                <del class="h6">原價 {{ singleProduct.origin_price }} 元</del>
               </div>
+              <div class="col-8 price">
+                <div class="h5">現在只要 {{ singleProduct.price }} 元</div>
+              </div>
+            </div>
+            <select
+              v-model="singleProduct.num"
+              name="qty"
+              id="product-qty"
+              class="form-control form-control-lg"
+            >
+              <option :value="num" v-for="num in 10" :key="num">
+                {{ num }} / {{ singleProduct.unit }}
+              </option>
+            </select>
           </div>
           <div class="modal-footer">
-            <div>小計 {{ singleProduct.price }} 元</div>
-            <button type="button" class="btn btn-primary">加到購物車</button>
+            <div>小計 {{ singleProduct.price * singleProduct.num }} 元</div>
+            <button
+              @click="addCart(singleProduct.id, singleProduct.num)"
+              type="button"
+              class="btn btn-primary"
+            >
+              加到購物車
+            </button>
           </div>
         </div>
       </div>
     </div>
+    <Cartcalculate></Cartcalculate>
   </div>
 </template>
 
 <style scoped>
 .product-image {
-    width: 500px;
-    height: 100%;
+  width: 500px;
+  height: 100%;
 }
 .col-8.price {
-    text-align: right;
+  text-align: right;
 }
 </style>
 
 <script>
 import $ from "jquery";
+import Cartcalculate from "../CartCalculate";
 
 export default {
   name: "CustomerOrder",
+  components: {
+    Cartcalculate,
+  },
   data() {
     return {
       products: [],
       singleProduct: {},
       status: {
-          loadingItem: '',
+        loadingItem: "",
+        addingChart: "",
       },
       isLoading: false,
     };
@@ -117,13 +159,41 @@ export default {
       vm.status.loadingItem = id;
       this.$http.get(api).then((response) => {
         vm.singleProduct = response.data.product;
-        vm.status.loadingItem = '';
+        vm.status.loadingItem = "";
       });
       $("#productModal").modal("show");
+    },
+    addCart(id, qty = 1) {
+      const api = `${process.env.PATH}/api/${process.env.CUSTOME_PATH}/cart`;
+      const vm = this;
+      vm.status.addingChart = id;
+      const cart = {
+        product_id: id,
+        qty,
+      };
+      this.$http.post(api, { data: cart }).then((response) => {
+        console.log(response.data);
+        // vm.getCart();
+        vm.status.addingChart = "";
+        $("#productModal").modal("hide");
+      });
+    },
+    getCart() {
+      const api = `${process.env.PATH}/api/${process.env.CUSTOME_PATH}/cart`;
+      const vm = this;
+      this.$http.get(api).then((response) => {
+        const shoppingCart = response.data.data.carts;
+        const subtotal = response.data.data.total;
+        const finalTotal = response.data.data.final_total;
+        this.$bus.$emit("get:cart", shoppingCart);
+        this.$bus.$emit("get:subtotal", subtotal);
+        this.$bus.$emit("get:finalTotal", finalTotal);
+      });
     },
   },
   mounted() {
     this.getProducts();
+    this.getCart();
   },
 };
 </script>
