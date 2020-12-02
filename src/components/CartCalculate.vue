@@ -13,7 +13,10 @@
         <tbody>
           <tr v-for="cartProduct in cartProducts" :key="cartProduct.id">
             <td><button @click="remove(cartProduct.id)" type="button" class="btn btn-outline-danger"><i class="far fa-trash-alt"></i></button></td>
-            <td>{{ cartProduct.product.title }}</td>
+            <td>
+              {{ cartProduct.product.title }}
+              <div v-if="cartProduct.coupon" class="text-success"><strong>已套用優惠券</strong></div>
+            </td>
             <td>{{ cartProduct.qty }} {{ cartProduct.product.unit }}</td>
             <td>{{ cartProduct.total }}</td>
           </tr>
@@ -22,16 +25,17 @@
             <td>總計</td>
             <td>{{ subtotal }}</td>
           </tr>
-          <tr class="coupon-total">
+          <tr v-if="subtotal !== finalTotal" class="coupon-total">
             <td colspan="2"></td>
             <td>折扣價</td>
-            <td></td>
+            <td>{{ finalTotal }}</td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="input-group mb-3">
       <input
+        v-model="couponCode"
         type="text"
         class="form-control"
         placeholder="請輸入折購碼"
@@ -40,6 +44,7 @@
       />
       <div class="input-group-append">
         <button
+          @click.prevent="useCoupon"
           class="btn btn-outline-secondary"
           type="button"
           id="button-coupon"
@@ -70,6 +75,7 @@ export default {
       cartProducts: [],
       subtotal: 0,
       finalTotal: 0,
+      couponCode: ''
     };
   },
   methods: {
@@ -85,6 +91,16 @@ export default {
             return false;
         }
       },
+      useCoupon() {
+        const api = `${process.env.PATH}/api/${process.env.CUSTOME_PATH}/coupon`;
+        const vm = this;
+        const couponCode = {
+          code: vm.couponCode
+        }
+        this.$http.post(api, { data: couponCode }).then((response) => {
+          vm.finalTotal = response.data.data.final_total;
+      });
+      }
   },
   created() {
     const vm = this;
