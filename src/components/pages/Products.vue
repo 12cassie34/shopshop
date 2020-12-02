@@ -306,10 +306,8 @@ export default {
     getProducts(page = 1) {
       this.isLoading = true;
       let api = `${process.env.PATH}/api/${process.env.CUSTOME_PATH}/admin/products?page=${page}`;
-      console.log(api);
       const vm = this;
       this.$http.get(api).then((response) => {
-        console.log(response.data);
         vm.products = response.data.products;
         this.isLoading = false;
         const pagination = response.data.pagination;
