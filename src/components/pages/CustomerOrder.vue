@@ -111,6 +111,7 @@
       </div>
     </div>
     <Cartcalculate @passFunction="getCart"></Cartcalculate>
+    <Buyerinfo></Buyerinfo>
   </div>
 </template>
 
@@ -127,11 +128,13 @@
 <script>
 import $ from "jquery";
 import Cartcalculate from "../CartCalculate";
+import Buyerinfo from "../BuyerInfo";
 
 export default {
   name: "CustomerOrder",
   components: {
     Cartcalculate,
+    Buyerinfo
   },
   data() {
     return {

@@ -99,7 +99,7 @@ export default {
         }
         this.$http.post(api, { data: couponCode }).then((response) => {
           vm.finalTotal = response.data.data.final_total;
-      });
+        });
       }
   },
   created() {
