@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading :active.sync="isLoading"></loading>
     <button
       @click="showCouponModal(true)"
       type="button"
@@ -156,19 +157,24 @@ export default {
       const vm = this;
       this.$http.get(api).then((response) => {
         vm.coupons = response.data.coupons;
+        this.isLoading = false;
       });
     },
     showCouponModal(isNew, item) {
+      this.isLoading = true;
       if (isNew) {
         this.tempCoupon = {};
         this.isNew = true;
+        this.isLoading = false;
       } else {
         this.tempCoupon = Object.assign({}, item);
         this.isNew = false;
+        this.isLoading = false;
       }
       $("#couponModal").modal("show");
     },
     updateCoupons() {
+      this.isLoading = true;
       let api = `${process.env.PATH}/api/${process.env.CUSTOME_PATH}/admin/coupon`;
       let method = "post";
       const vm = this;

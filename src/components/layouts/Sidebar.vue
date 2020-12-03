@@ -52,19 +52,19 @@
               <router-link to="/admin/products" class="nav-link" :class="{'active' : $route.path == '/admin/products'}">
                 <span data-feather="home"></span>
                 <i class="fas fa-list-ul"></i>
-                產品列表</span>
+                產品列表
               </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file"></span>
+              <router-link to="/admin/orders" class="nav-link" :class="{'active' : $route.path == '/admin/orders'}">
+              <span data-feather="orders"></span>
                 <i class="fas fa-shopping-cart"></i>
                 訂單列表
-              </a>
+              </router-link>
             </li>
             <li class="nav-item">
               <router-link to="/admin/coupons" class="nav-link" :class="{'active' : $route.path == '/admin/coupons'}">
-                <span data-feather="shopping-cart"></span>
+                <span data-feather="coupons"></span>
                 <i class="fas fa-ticket-alt"></i>
                 優惠券
               </router-link>
