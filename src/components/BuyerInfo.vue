@@ -116,6 +116,9 @@ export default {
       const buyerData = vm.userData;
       this.$http.post(api, { data: buyerData }).then((response) => {
         console.log(response.data);
+        if (response.data.success) {
+          vm.$router.push(`/customer_order/${response.data.orderId}`);
+        }
       });
     },
   },

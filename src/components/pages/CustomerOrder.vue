@@ -1,5 +1,6 @@
 <template>
   <div class="row">
+    <loading :active.sync="isLoading"></loading>
     <div class="col-md-4 mb-4" v-for="(product, key) in products" :key="key">
       <div class="card border-0 shadow-sm">
         <div
@@ -154,15 +155,18 @@ export default {
       const vm = this;
       this.$http.get(api).then((response) => {
         vm.products = response.data.products;
+        this.isLoading = false;
       });
     },
     getSingleProduct(id) {
+      this.isLoading = true;
       const api = `${process.env.PATH}/api/${process.env.CUSTOME_PATH}/product/${id}`;
       const vm = this;
       vm.status.loadingItem = id;
       this.$http.get(api).then((response) => {
         vm.singleProduct = response.data.product;
         vm.status.loadingItem = "";
+        this.isLoading = false;
       });
       $("#productModal").modal("show");
     },
